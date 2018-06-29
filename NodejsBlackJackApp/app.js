@@ -1,5 +1,4 @@
 'use strict';
-var count = 0;
 var drawCount = 0;
 var value = 0;
 var playerValue = 0;
@@ -7,67 +6,71 @@ var houseValue = 0;
 var playerLost = false;
 var houseLost = false;
 
-//Create card deck of 52 cards in an array
-var deck = [2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10,
-    10, 10, 10, "J", "J", "J", "J", "Q", "Q", "Q", "Q", "K", "K", "K", "K", "A", "A", "A", "A"];
 
-//This is a test for the branch repositories
+var deck = []; //Array for playing deck
+var cardValue = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+var cardSuit = ["hearts", "diamonds", "spades", "clubs"];
+var drawn = []; //Array for already drawn cards
 
-//Testdeck
-//var deck = ["A", "A", "A", "A", "J", "J", "J", "J"];
+//Create deck by pairing values and suits to form an array of 52 cards
+function createDeck() {
+    //Go through the four different suits
+    for (var i = 0; i < cardSuit.length; i++) {
+        //Go through the 13 different values
+        for (var n = 0; n < cardValue.length; n++) {
+            //Pair a suit with a value
+            var card = {Value: cardValue[n], Suit: cardSuit[i] };
+            //push the two values into the deck
+            deck.push(card);
+        }
+    }
+    return deck;
+}
 
-//Array for already drawn cards
-var drawn = [];
 
+
+
+
+//Switch  function to pair cards with their value
 function cc(card) {
     switch (card) {
-        case 2:
-            count++;
+        case "2":
             value += 2;
             break;
-        case 3:
-            count++;
+        case "3":
             value += 3;
             break;
-        case 4:
-            count++;
+        case "4":
             value += 4;
             break;
-        case 5:
-            count++;
+        case "5":
             value += 5;
             break;
-        case 6:
-            count++;
+        case "6":
             value += 6;
             break;
-        case 7:
+        case "7":
             value += 7;
             break;
-        case 8:
+        case "8":
             value += 8;
             break;
-        case 9:
+        case "9":
             value += 9;
             break;
-        case 10:
-            count--;
+        case "10":
             value += 10;
             break;
         case "J":
-            count--;
             value += 10;
             break;
         case "Q":
-            count--;
             value += 10;
             break;
         case "K":
-            count--;
             value += 10;
             break;
         case "A":
-            count -= 1;
             if (value <= 10) {
                 value += 11;
             }
@@ -78,19 +81,6 @@ function cc(card) {
     }
 
     return "Card drawn: " + card + " | Current value: " + value
-
-    /*if (value <= 21) {
-        if (count > 0) {
-            return "Card drawn: " + card + " | Current value: " + value + " | Current count: " + count + " Bet";
-        }
-        else {
-            return "Card drawn: " + card + " | Current value: " + value + " | Current count: " + count + " Hold";
-        }
-    }
-    else if (value > 21) {
-        return "YOU LOSE!"
-    }*/
-
  }
 
 
@@ -100,11 +90,11 @@ function drawcard() {
     //Count number of cards drawn
     drawCount++;
 
-    //Find the position of the card in the deck array
+    //Find the random position of the card in the deck array
     var cardPos = Math.floor(Math.random() * deck.length);
 
-    //Find the actual card in the deck array
-    var newCard = deck[cardPos];
+    //Find the actual card in the deck array, looking only at the "Value" object in the array, using the randomn position of "cardPos"
+    var newCard = deck[cardPos].Value;
     //console.log("Card drawn: " + newCard);
 
     //Run the Card counting fuction to determine next move
@@ -152,7 +142,7 @@ function runGame() {
             value = 0;
             break;
         }
-
+  
     }
 
     if (playerValue < 21 && drawCount < 5) {
@@ -178,9 +168,6 @@ function runGame() {
     }
 
 
-    //console.log("Total player value: " + playerValue);
-    //console.log("Total house value: " + houseValue);
-
     if (playerValue >= houseValue && playerLost == false) {
         console.log("Congratulations, you win!");
     }
@@ -193,42 +180,12 @@ function runGame() {
     drawCount = 0;
 }
 
+deck = createDeck();
 runGame();
+console.log("");
+console.log("Cards placed in the discard pile:");
+console.log(drawn);
 
-
-
-/*//Draw up to five random cards from the deck if the current value of cards drawn is less than 17 and place the card in the drawn array
-for (var i = 0; i < 5; i++) {
-    if (value < 17) {
-
-        //Find the position of the card in the deck array
-        var cardPos = Math.floor(Math.random() * deck.length);
-
-        //Find the actual card in the deck array
-        var newCard = deck[cardPos];
-        //console.log("Card drawn: " + newCard);
-
-        //Run the Card counting fuction to determine next move
-        console.log(cc(newCard));
-
-        //Remove the card from the deck array and place it in temp array "cardRemoved"
-        var cardRemoved = deck.splice(cardPos, 1);
-        //console.log("Card removed " + cardRemoved);
-        
-        //Move the card from the temp array "cardRemoved" to the drawn cards array "drawn"
-        drawn.unshift(cardRemoved[0]);
-        console.log("Card placed in the drawn pile: " + drawn);
-
-        //Clear up the temp array "cardRemoved" before next runthrough
-        cardRemoved.shift();
-    }
-    else {
-        console.log("Final value: " + value);
-        value = playValue;
-        value = 0;
-        break;
-    }
-}*/
 
 //Prevent consol from shutting down
 const readline = require('readline');
