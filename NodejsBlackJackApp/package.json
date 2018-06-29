@@ -1,0 +1,9 @@
+{
+  "name": "nodejs-black-jack-app",
+  "version": "0.0.0",
+  "description": "NodejsBlackJackApp",
+  "main": "app.js",
+  "author": {
+    "name": "pbsim"
+  }
+}
